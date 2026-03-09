@@ -38,7 +38,10 @@ namespace CLINICSYSTEM.Migrations
                     b.Property<int>("DoctorId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PatientId")
+                    b.Property<string>("PatientExternalId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("PatientId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("ReasonForVisit")
@@ -380,6 +383,81 @@ namespace CLINICSYSTEM.Migrations
                     b.ToTable("Prescriptions");
                 });
 
+            modelBuilder.Entity("CLINICSYSTEM.Models.ReferralModel", b =>
+                {
+                    b.Property<int>("ReferralId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime?>("AcceptedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("CompletedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Diagnosis")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("DoctorNotes")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExternalReferralId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExternalServiceFeedback")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ExternalServiceUrl")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PatientExternalId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Reason")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("RecommendedTreatment")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ReferralType")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("SentAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("ReferralId");
+
+                    b.HasIndex("ExternalReferralId");
+
+                    b.HasIndex("PatientExternalId");
+
+                    b.HasIndex("DoctorId", "Status");
+
+                    b.ToTable("Referrals");
+                });
+
             modelBuilder.Entity("CLINICSYSTEM.Models.TimeSlotModel", b =>
                 {
                     b.Property<int>("TimeSlotId")
@@ -661,8 +739,7 @@ namespace CLINICSYSTEM.Migrations
                     b.HasOne("CLINICSYSTEM.Models.PatientModel", "Patient")
                         .WithMany("Appointments")
                         .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("CLINICSYSTEM.Models.TimeSlotModel", "TimeSlot")
                         .WithMany("Appointments")
@@ -770,6 +847,17 @@ namespace CLINICSYSTEM.Migrations
                         .IsRequired();
 
                     b.Navigation("Consultation");
+                });
+
+            modelBuilder.Entity("CLINICSYSTEM.Models.ReferralModel", b =>
+                {
+                    b.HasOne("CLINICSYSTEM.Models.DoctorModel", "Doctor")
+                        .WithMany()
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("CLINICSYSTEM.Models.TimeSlotModel", b =>

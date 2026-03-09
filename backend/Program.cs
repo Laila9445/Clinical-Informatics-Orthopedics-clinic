@@ -181,7 +181,47 @@ builder.Services.AddScoped<IConsultationService, ConsultationService>();
 builder.Services.AddScoped<IPrescriptionService, PrescriptionService>();
 builder.Services.AddScoped<IMedicalImageService, MedicalImageService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IReferralService, ReferralService>();
 builder.Services.AddScoped<PdfService>();
+
+// HttpClient for external services integration
+builder.Services.AddHttpClient("PhysiotherapyApi", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var baseUrl = configuration["ExternalServices:PhysiotherapyApi:BaseUrl"];
+    var apiKey = configuration["ExternalServices:PhysiotherapyApi:ApiKey"];
+    
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        client.BaseAddress = new Uri(baseUrl);
+    }
+    
+    if (!string.IsNullOrEmpty(apiKey))
+    {
+        client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+    }
+    
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
+
+builder.Services.AddHttpClient("PatientPortalApi", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var baseUrl = configuration["ExternalServices:PatientPortalApi:BaseUrl"];
+    var apiKey = configuration["ExternalServices:PatientPortalApi:ApiKey"];
+    
+    if (!string.IsNullOrEmpty(baseUrl))
+    {
+        client.BaseAddress = new Uri(baseUrl);
+    }
+    
+    if (!string.IsNullOrEmpty(apiKey))
+    {
+        client.DefaultRequestHeaders.Add("X-API-Key", apiKey);
+    }
+    
+    client.Timeout = TimeSpan.FromSeconds(30);
+});
 
 // AutoMapper
 builder.Services.AddAutoMapper(typeof(Program).Assembly);

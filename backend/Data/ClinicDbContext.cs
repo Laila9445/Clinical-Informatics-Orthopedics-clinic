@@ -21,6 +21,7 @@ namespace CLINICSYSTEM.Data
         public DbSet<MedicalRecordModel> MedicalRecords { get; set; }
         public DbSet<MedicalImageModel> MedicalImages { get; set; }
         public DbSet<NotificationModel> Notifications { get; set; }
+        public DbSet<ReferralModel> Referrals { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -60,6 +61,9 @@ namespace CLINICSYSTEM.Data
             modelBuilder.Entity<NotificationModel>()
                 .HasKey(n => n.NotificationId);
 
+            modelBuilder.Entity<ReferralModel>()
+                .HasKey(r => r.ReferralId);
+
             // User relationships
             modelBuilder.Entity<PatientModel>()
                 .HasOne(p => p.User)
@@ -78,7 +82,8 @@ namespace CLINICSYSTEM.Data
                 .HasOne(a => a.Patient)
                 .WithMany(p => p.Appointments)
                 .HasForeignKey(a => a.PatientId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Restrict)
+                .IsRequired(false); // Make patient relationship optional
 
             modelBuilder.Entity<MedicalRecordModel>()
                 .HasOne(mr => mr.Patient)
@@ -104,6 +109,13 @@ namespace CLINICSYSTEM.Data
                 .WithMany(d => d.Schedules)
                 .HasForeignKey(ds => ds.DoctorId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            // Referral relationships
+            modelBuilder.Entity<ReferralModel>()
+                .HasOne(r => r.Doctor)
+                .WithMany()
+                .HasForeignKey(r => r.DoctorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Consultation relationships
             modelBuilder.Entity<ConsultationModel>()
@@ -158,6 +170,16 @@ namespace CLINICSYSTEM.Data
 
             modelBuilder.Entity<DoctorSchedule>()
                 .HasIndex(ds => new { ds.DoctorId, ds.DayOfWeek });
+
+            // Referral indexes
+            modelBuilder.Entity<ReferralModel>()
+                .HasIndex(r => r.PatientExternalId);
+
+            modelBuilder.Entity<ReferralModel>()
+                .HasIndex(r => new { r.DoctorId, r.Status });
+
+            modelBuilder.Entity<ReferralModel>()
+                .HasIndex(r => r.ExternalReferralId);
         }
     }
 }

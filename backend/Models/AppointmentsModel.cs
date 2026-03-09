@@ -7,7 +7,19 @@ namespace CLINICSYSTEM.Models
         [Key]
         public int AppointmentId { get; set; }
         public int DoctorId { get; set; }
-        public int PatientId { get; set; }
+        
+        /// <summary>
+        /// Internal patient ID - kept for backward compatibility
+        /// Will be phased out when fully migrated to external patient system
+        /// </summary>
+        public int? PatientId { get; set; }
+        
+        /// <summary>
+        /// External patient ID from the Patient Portal system
+        /// This will be the primary patient identifier in the integrated hospital system
+        /// </summary>
+        public string? PatientExternalId { get; set; }
+        
         public int TimeSlotId { get; set; }
         public string Status { get; set; } = "Scheduled"; // Scheduled, Active, Completed, Cancelled
         public string? ReasonForVisit { get; set; }
@@ -19,7 +31,12 @@ namespace CLINICSYSTEM.Models
 
         // Navigation properties
         public DoctorModel? Doctor { get; set; }
+        
+        /// <summary>
+        /// Optional - kept for backward compatibility
+        /// </summary>
         public PatientModel? Patient { get; set; }
+        
         public TimeSlotModel? TimeSlot { get; set; }
         public ConsultationModel? Consultation { get; set; }
     }
