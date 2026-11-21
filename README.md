@@ -1,5 +1,5 @@
 # Clinical Informatics – Orthopedics Clinic
-A full-stack clinic management system for an orthopedics practice. It was designed with orthopedic specialist Dr. Ahmed Nabil. Patients can book and manage appointments, upload medical images and receive prescriptions. Doctors run consultations, issue prescriptions, manage their schedule and send referrals.
+A full-stack clinic management system for an orthopedics practice. It was designed with orthopedic specialist. Patients can book and manage appointments, upload medical images and receive prescriptions. Doctors run consultations, issue prescriptions, manage their schedule and send referrals.
 The repo has two parts:
 | Folder | Description |
 |--------|-------------|
